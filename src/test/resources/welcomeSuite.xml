@@ -1,0 +1,8 @@
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite name="Welcome Suite">
+    <test name="FSSuiteTest">
+        <classes>
+            <class name="com.lazerycode.selenium.tests.agm.FSSuite"/>
+        </classes>
+    </test>
+</suite>
