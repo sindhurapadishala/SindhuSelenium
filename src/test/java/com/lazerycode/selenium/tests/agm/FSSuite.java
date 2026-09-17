@@ -19,7 +19,7 @@ public class FSSuite extends DriverBase {
         loginPage.launchBrowser("https://github.com/login");
 //        Thread.sleep(2000);
         loginPage.enterUsername("bhanukeerthi1988@gmail.com");
-        loginPage.enterPassword("Eshita@2707");
+        loginPage.enterPassword("Eshita@#1234");
         loginPage.clickSignin();
     }
      @Test(description = "Creating Repository", priority = 0)
@@ -71,8 +71,17 @@ public class FSSuite extends DriverBase {
         loginPage.enterRepo("bhanukeerthi1988-bit/Bhanu");
         loginPage.clickconfirmDelrepotxt();
         loginPage.clickverifyEmail();
-
-
     }
+    @Test(description = "Create a Private Repository", priority = 3)
+    public void createprivateRepo() throws Exception {
+
+        loginPage.clickNewbutton();
+        loginPage.enteReponame("Testcase-1" + System.currentTimeMillis());
+        loginPage.clickselectRepotype();
+        Thread.sleep(5000);
+        loginPage.clickCreaterepo();
+        Thread.sleep(5000);
+
+
 
 }

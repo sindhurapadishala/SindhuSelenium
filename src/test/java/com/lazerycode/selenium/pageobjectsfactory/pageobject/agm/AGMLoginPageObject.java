@@ -80,6 +80,9 @@ public class AGMLoginPageObject extends BasePageObject {
     @FindBy(xpath = "//span[text()='Verify via email']/parent::span")
     private WebElement verifyEmail;
 
+    @FindBy(xpath = "//button[@data-component='ActionMenu.Button' and @id='visibility-anchor-button']")
+    private WebElement selectRepotype;
+
     public AGMLoginPageObject() throws Exception {
         super();
     }
@@ -259,10 +262,14 @@ public class AGMLoginPageObject extends BasePageObject {
         Reporter.log("Click the Confirm Delete Repository text ");
     }
 
-
     public void clickverifyEmail() {
 
         verifyEmail.click();
         Reporter.log("Click the Verify Email button ");
+    }
+    public void clickselectRepotype(){
+
+        selectRepotype.click();
+        Reporter.log("click Select  the Repo type");
     }
 }
