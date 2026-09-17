@@ -4,13 +4,24 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
          http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
-    <groupId>com.lazerycode.selenium</groupId>
-    <artifactId>maven-template</artifactId>
-    <version>1.0-SNAPSHOT</version>
     <modelVersion>4.0.0</modelVersion>
 
+    <groupId>com.lazerycode.selenium</groupId>
+
+    <artifactId>maven-template</artifactId>
+
+    <version>1.0-SNAPSHOT</version>
+
+
+    <!-- ===================================================== -->
+    <!-- Properties -->
+    <!-- ===================================================== -->
+
     <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+        <project.build.sourceEncoding>
+            UTF-8
+        </project.build.sourceEncoding>
 
         <java.version>1.8</java.version>
 
@@ -20,67 +31,168 @@
 
         <webdrivermanager.version>5.9.2</webdrivermanager.version>
 
+        <extentreports.version>5.1.1</extentreports.version>
+
         <maven-compiler-plugin.version>3.11.0</maven-compiler-plugin.version>
 
         <maven-surefire-plugin.version>3.5.2</maven-surefire-plugin.version>
+
     </properties>
+
+
+    <!-- ===================================================== -->
+    <!-- Dependencies -->
+    <!-- ===================================================== -->
 
     <dependencies>
 
+
         <!-- Selenium -->
+
         <dependency>
-            <groupId>org.seleniumhq.selenium</groupId>
-            <artifactId>selenium-java</artifactId>
-            <version>${selenium.version}</version>
+
+            <groupId>
+                org.seleniumhq.selenium
+            </groupId>
+
+            <artifactId>
+                selenium-java
+            </artifactId>
+
+            <version>
+                ${selenium.version}
+            </version>
+
         </dependency>
+
 
         <!-- WebDriver Manager -->
+
         <dependency>
-            <groupId>io.github.bonigarcia</groupId>
-            <artifactId>webdrivermanager</artifactId>
-            <version>${webdrivermanager.version}</version>
+
+            <groupId>
+                io.github.bonigarcia
+            </groupId>
+
+            <artifactId>
+                webdrivermanager
+            </artifactId>
+
+            <version>
+                ${webdrivermanager.version}
+            </version>
+
         </dependency>
+
 
         <!-- TestNG -->
+
         <dependency>
-            <groupId>org.testng</groupId>
-            <artifactId>testng</artifactId>
-            <version>${testng.version}</version>
-            <scope>test</scope>
+
+            <groupId>
+                org.testng
+            </groupId>
+
+            <artifactId>
+                testng
+            </artifactId>
+
+            <version>
+                ${testng.version}
+            </version>
+
+            <scope>
+                test
+            </scope>
+
         </dependency>
 
+
+        <!-- ================================================= -->
         <!-- Extent Reports -->
+        <!-- ================================================= -->
+
         <dependency>
-            <groupId>com.aventstack</groupId>
-            <artifactId>extentreports</artifactId>
-            <version>5.1.1</version>
+
+            <groupId>
+                com.aventstack
+            </groupId>
+
+            <artifactId>
+                extentreports
+            </artifactId>
+
+            <version>
+                ${extentreports.version}
+            </version>
+
         </dependency>
+
 
     </dependencies>
 
+
+    <!-- ===================================================== -->
+    <!-- Build -->
+    <!-- ===================================================== -->
+
     <build>
+
         <plugins>
 
+
             <!-- Maven Compiler Plugin -->
+
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>${maven-compiler-plugin.version}</version>
+
+                <groupId>
+                    org.apache.maven.plugins
+                </groupId>
+
+                <artifactId>
+                    maven-compiler-plugin
+                </artifactId>
+
+                <version>
+                    ${maven-compiler-plugin.version}
+                </version>
 
                 <configuration>
-                    <source>${java.version}</source>
-                    <target>${java.version}</target>
+
+                    <source>
+                        ${java.version}
+                    </source>
+
+                    <target>
+                        ${java.version}
+                    </target>
+
                 </configuration>
+
             </plugin>
+
 
             <!-- Maven Surefire Plugin -->
+
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <version>${maven-surefire-plugin.version}</version>
+
+                <groupId>
+                    org.apache.maven.plugins
+                </groupId>
+
+                <artifactId>
+                    maven-surefire-plugin
+                </artifactId>
+
+                <version>
+                    ${maven-surefire-plugin.version}
+                </version>
+
             </plugin>
 
+
         </plugins>
+
     </build>
 
 </project>
