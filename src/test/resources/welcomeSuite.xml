@@ -2,7 +2,10 @@
 <suite name="Welcome Suite">
     <test name="FSSuiteTest">
         <classes>
-            <class name="com.lazerycode.selenium.tests.agm.FSSuite"/>
+            <class name="com.lazerycode.selenium.tests.agm.FSSuite">
+
+            </class>
+
         </classes>
     </test>
 </suite>
