@@ -1,16 +1,26 @@
 package com.lazerycode.selenium.tests.agm;
 
+import com.aventstack.extentreports.ExtentTest;
+import com.aventstack.extentreports.Status;
 import com.lazerycode.selenium.tests.TestTemplate;
 import com.lazerycode.selenium.pageobjectsfactory.pageobject.agm.AGMLoginPageObject;
 
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.Wait;
+import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.annotations.BeforeClass;
+import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
+
+import java.time.Instant;
+
+//import static com.lazerycode.selenium.listeners.ExtentListener.extent;
 
 public class FSSuite extends TestTemplate {
 
 
     AGMLoginPageObject loginPage;
-
+    //test = extent.createTest("Verify Login Test");
 
     // =========================================================
     // Setup
@@ -37,9 +47,7 @@ public class FSSuite extends TestTemplate {
                 properties.getProperty("password");
 
 
-        System.out.println(
-                "******************************************"
-        );
+        //test.log(Status.INFO, "FS Suite Test Started");
 
 
         System.out.println(
@@ -80,12 +88,13 @@ public class FSSuite extends TestTemplate {
     // Test 1 - Create Repository
     // =========================================================
 
-    @Test(
-            description = "Creating Repository",
-            priority = 0
-    )
+//    @Test(
+//            description = "Creating Repository",
+//            priority = 0
+//    )
     public void createRepository() throws Exception {
 
+        Thread.sleep(2000);
 
         loginPage.clickNewbutton();
 
@@ -96,13 +105,13 @@ public class FSSuite extends TestTemplate {
         );
 
 
-        Thread.sleep(5000);
+        Thread.sleep(2000);
 
 
         loginPage.clickCreaterepo();
 
 
-        Thread.sleep(5000);
+        Thread.sleep(2000);
 
 
         System.out.println(
@@ -135,31 +144,31 @@ public class FSSuite extends TestTemplate {
         loginPage.clickhomeButton();
 
 
-        Thread.sleep(5000);
+        Thread.sleep(2000);
 
 
         loginPage.clickselectRepo();
 
 
-        Thread.sleep(5000);
+        Thread.sleep(2000);
 
 
         loginPage.clickmain();
 
 
-        Thread.sleep(5000);
+        Thread.sleep(2000);
 
 
         loginPage.clickviewAll();
 
 
-        Thread.sleep(5000);
+        Thread.sleep(2000);
 
 
         loginPage.clicknewBranch();
 
 
-        Thread.sleep(5000);
+        Thread.sleep(2000);
 
 
         String branchName =
@@ -172,13 +181,13 @@ public class FSSuite extends TestTemplate {
         );
 
 
-        Thread.sleep(5000);
+        Thread.sleep(2000);
 
 
         loginPage.clickcreateNewbranch();
 
 
-        Thread.sleep(5000);
+        Thread.sleep(2000);
 
 
         System.out.println(
@@ -186,8 +195,7 @@ public class FSSuite extends TestTemplate {
         );
 
 
-        System.out.println(
-                "Branch Created Successfully"
+        System.out.println(                "Branch Created Successfully"
         );
 
 
@@ -206,43 +214,76 @@ public class FSSuite extends TestTemplate {
             priority = 2
     )
     public void deleteRepo() throws Exception {
-
-
+        loginPage.clickhomeButton();
+        Thread.sleep(5000);
         loginPage.clickselectDelrepo();
-
+        Thread.sleep(5000);
 
         loginPage.clicksettings();
 
-
+        Thread.sleep(2000);
         loginPage.clickdeleteRepo();
-
+        Thread.sleep(2000);
 
         loginPage.clickconfirmDelrepo();
 
-
+        Thread.sleep(2000);
         loginPage.clickconfirmTextdelete();
-
+        Thread.sleep(2000);
 
         loginPage.enterRepo(
-                "bhanukeerthi1988-bit/Bhanu"
+                "bhanukeerthi1988-bit/Testcase-1"
         );
 
 
         loginPage.clickconfirmDelrepotxt();
 
 
-        loginPage.clickverifyEmail();
+//        loginPage.clickverifyEmail();
     }
-    @Test(description = "Create a Private Repository", priority = 3)
+  //  @Test(description = "Create a Private Repository", priority = 3)
     public void createprivateRepo() throws Exception {
+        loginPage.clickhomeButton();
+        Thread.sleep(5000);
+        loginPage.clickNewbutton();
+        Thread.sleep(2000);
+        loginPage.enteReponame("Testcase-1" + System.currentTimeMillis());
+        Thread.sleep(2000);
+        loginPage.clickselectRepotype();
+        Thread.sleep(2000);
+        loginPage.clickprivateRepo();
+        Thread.sleep(2000);
+        loginPage.clickCreaterepo();
+        Thread.sleep(2000);
+    }
+    @DataProvider(name = "repoTypes")
+    public Object[][] repoTypes() {
+        return new Object[][]{
+                {"TestCase-Public-" + System.currentTimeMillis(), "public"},
+                {"TestCase-Private-" + System.currentTimeMillis(), "private"}
+        };
+    }
+    @Test(dataProvider = "repoTypes", description = "Create Public & Private Repositories")
+    public void createRepository(String repoName, String repoType) throws Exception {
+
+        loginPage.clickhomeButton();
 
         loginPage.clickNewbutton();
-        loginPage.enteReponame("Testcase-1" + System.currentTimeMillis());
-        loginPage.clickselectRepotype();
-        Thread.sleep(5000);
+
+        loginPage.enteReponame(repoName);
+
+        if (repoType.equalsIgnoreCase("private")) {
+
+            loginPage.clickselectRepotype();
+            loginPage.clickprivateRepo();
+        }
+
         loginPage.clickCreaterepo();
-        Thread.sleep(5000);
 
-
+        System.out.println("******************************************");
+        System.out.println(repoType.toUpperCase() + " Repository Created Successfully → " + repoName);
+        System.out.println("******************************************");
     }
+
+
 }

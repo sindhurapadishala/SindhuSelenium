@@ -4,6 +4,7 @@ import com.lazerycode.selenium.pageobjectsfactory.pageobject.BasePageObject;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.testng.Assert;
 import org.testng.Reporter;
 
@@ -56,7 +57,7 @@ public class AGMLoginPageObject extends BasePageObject {
     @FindBy(xpath = "//span[text()='Create new branch']")
     private WebElement createNewbranch;
 
-    @FindBy(xpath = "//div[@class='dashboard-sidebar']//span[text()='/']/parent::a[@data-hovercard-url='/bhanukeerthi1988-bit/Bhanu/hovercard']")
+    @FindBy(xpath = "//div[@class='dashboard-sidebar']//span[text()='/']/parent::a[@data-hovercard-url='/bhanukeerthi1988-bit/Testcase-1/hovercard']")
     private WebElement selectDelrepo;
 
     @FindBy(xpath = "//a[@data-tab-item='settings']")
@@ -71,7 +72,7 @@ public class AGMLoginPageObject extends BasePageObject {
     @FindBy(xpath = "//span[text()='I have read and understand these effects']")
     private WebElement confirmTextdelete;
 
-    @FindBy(xpath = "//input[@data-repo-nwo='bhanukeerthi1988-bit/Bhanu']")
+    @FindBy(xpath = "//input[@data-repo-nwo='bhanukeerthi1988-bit/Testcase-1']")
     private WebElement reenterRepo;
 
     @FindBy(xpath = "//button[@data-test-selector='repo-delete-proceed-button']//span[text()='Delete this repository']/parent::span")
@@ -82,6 +83,9 @@ public class AGMLoginPageObject extends BasePageObject {
 
     @FindBy(xpath = "//button[@data-component='ActionMenu.Button' and @id='visibility-anchor-button']")
     private WebElement selectRepotype;
+
+    @FindBy(xpath = "//div[@class='prc-ActionList-ActionListContent-KBb8-']//span[text()='Private']")
+    private WebElement privateRepo;
 
     public AGMLoginPageObject() throws Exception {
         super();
@@ -135,13 +139,14 @@ public class AGMLoginPageObject extends BasePageObject {
     }
 
     public void clickNewbutton() {
-
+        wait.until(ExpectedConditions.elementToBeClickable(NewButton));
         NewButton.click();
         Reporter.log("Cicked on the New Button ");
 
     }
 
     public void enteReponame(String rName) {
+        wait.until(ExpectedConditions.visibilityOf(repoName));
 
         repoName.sendKeys(rName);
         Reporter.log("Enter the new Repository Name ");
@@ -149,6 +154,7 @@ public class AGMLoginPageObject extends BasePageObject {
     }
 
     public void clickCreaterepo() {
+        wait.until(ExpectedConditions.elementToBeClickable(createRepo));
 
         createRepo.click();
         Reporter.log("Cicked on the create repository button ");
@@ -271,5 +277,10 @@ public class AGMLoginPageObject extends BasePageObject {
 
         selectRepotype.click();
         Reporter.log("click Select  the Repo type");
+    }
+    public void clickprivateRepo(){
+        wait.until(ExpectedConditions.elementToBeClickable(privateRepo));
+        privateRepo.click();
+        Reporter.log("Select Private Repo");
     }
 }

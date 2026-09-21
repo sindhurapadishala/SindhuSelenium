@@ -1,5 +1,6 @@
 package com.lazerycode.selenium.tests;
 
+import com.aventstack.extentreports.ExtentTest;
 import com.lazerycode.selenium.DriverBase;
 
 import org.testng.annotations.AfterSuite;
@@ -13,7 +14,7 @@ import java.util.Properties;
 
 public class TestTemplate extends DriverBase {
 
-
+    protected ExtentTest extentTest;
     public static Properties properties =
             new Properties();
 
