@@ -1,6 +1,8 @@
+
 package com.lazerycode.selenium.tests;
 
 import com.lazerycode.selenium.DriverBase;
+import com.lazerycode.selenium.listeners.ExtentListener;
 
 import org.testng.annotations.AfterSuite;
 import org.testng.annotations.BeforeSuite;
@@ -13,18 +15,13 @@ import java.util.Properties;
 
 public class TestTemplate extends DriverBase {
 
-
-    public static Properties properties =
-            new Properties();
-
+    public static Properties properties = new Properties();
 
     // =========================================================
-    // Property File
+    // PROPERTY FILE
     // =========================================================
 
-    String propertyFile =
-            System.getProperty("myproperty");
-
+    String propertyFile = System.getProperty("myproperty");
 
     String invFile =
             System.getProperty("user.dir")
@@ -45,9 +42,8 @@ public class TestTemplate extends DriverBase {
                     + File.separator
                     + propertyFile;
 
-
     // =========================================================
-    // Load Properties
+    // LOAD PROPERTIES
     // =========================================================
 
     @BeforeSuite
@@ -57,54 +53,82 @@ public class TestTemplate extends DriverBase {
                 "=========================================="
         );
 
-        System.out.println(
-                "Loading Property File"
-        );
+        System.out.println("Loading Property File");
 
         System.out.println(
                 "=========================================="
         );
 
+        try (BufferedReader reader =
+                     new BufferedReader(new FileReader(invFile))) {
 
-        BufferedReader reader =
-                new BufferedReader(
-                        new FileReader(invFile)
-                );
-
-
-        properties.load(reader);
-
-
-        reader.close();
-
+            properties.load(reader);
+        }
 
         System.out.println(
-                "URL: "
-                        + properties.getProperty("url")
+                "URL: " + properties.getProperty("url")
         );
 
+        System.out.println("Properties loaded successfully.");
 
         System.out.println(
-                "Properties loaded successfully."
+                "=========================================="
         );
     }
 
+    // =========================================================
+    // EXTENT LOGGING METHODS
+    // =========================================================
+
+    protected void logInfo(String message) {
+
+        System.out.println("[INFO] " + message);
+
+        if (ExtentListener.getExtentTest() != null) {
+            ExtentListener.getExtentTest().info(message);
+        }
+    }
+
+    protected void logPass(String message) {
+
+        System.out.println("[PASS] " + message);
+
+        if (ExtentListener.getExtentTest() != null) {
+            ExtentListener.getExtentTest().pass(message);
+        }
+    }
+
+    protected void logFail(String message) {
+
+        System.out.println("[FAIL] " + message);
+
+        if (ExtentListener.getExtentTest() != null) {
+            ExtentListener.getExtentTest().fail(message);
+        }
+    }
+
+    protected void logWarning(String message) {
+
+        System.out.println("[WARNING] " + message);
+
+        if (ExtentListener.getExtentTest() != null) {
+            ExtentListener.getExtentTest().warning(message);
+        }
+    }
 
     // =========================================================
-    // Store Properties
+    // STORE PROPERTIES
     // =========================================================
 
     @AfterSuite
     public void afterSuite() throws Exception {
 
-        properties.store(
-                new FileOutputStream(invFile),
-                null
-        );
+        try (FileOutputStream outputStream =
+                     new FileOutputStream(invFile)) {
 
+            properties.store(outputStream, null);
+        }
 
-        System.out.println(
-                "Properties saved successfully."
-        );
+        System.out.println("Properties saved successfully.");
     }
 }

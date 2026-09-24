@@ -1,3 +1,4 @@
+
 package com.lazerycode.selenium.listeners;
 
 import com.aventstack.extentreports.ExtentReports;
@@ -27,12 +28,11 @@ public class ExtentListener implements ITestListener {
     private static ThreadLocal<ExtentTest> extentTest =
             new ThreadLocal<ExtentTest>();
 
-
     // =========================================================
     // EXTENT REPORT
     // =========================================================
 
-    private static ExtentReports getExtentReports() {
+    private static synchronized ExtentReports getExtentReports() {
 
         if (extent == null) {
 
@@ -45,8 +45,7 @@ public class ExtentListener implements ITestListener {
                             + File.separator
                             + "test-output";
 
-            File directory =
-                    new File(reportDirectory);
+            File directory = new File(reportDirectory);
 
             if (!directory.exists()) {
                 directory.mkdirs();
@@ -59,10 +58,8 @@ public class ExtentListener implements ITestListener {
                             + timeStamp
                             + ".html";
 
-
             ExtentSparkReporter sparkReporter =
                     new ExtentSparkReporter(reportPath);
-
 
             sparkReporter.config()
                     .setDocumentTitle(
@@ -74,15 +71,11 @@ public class ExtentListener implements ITestListener {
                             "AGM Selenium Automation Report"
                     );
 
-
             extent = new ExtentReports();
 
             extent.attachReporter(sparkReporter);
 
-
-            // =================================================
-            // SYSTEM INFORMATION
-            // =================================================
+            // System Information
 
             extent.setSystemInfo(
                     "Project",
@@ -118,6 +111,13 @@ public class ExtentListener implements ITestListener {
         return extent;
     }
 
+    // =========================================================
+    // GET CURRENT EXTENT TEST
+    // =========================================================
+
+    public static ExtentTest getExtentTest() {
+        return extentTest.get();
+    }
 
     // =========================================================
     // SUITE START
@@ -132,15 +132,12 @@ public class ExtentListener implements ITestListener {
                 "=========================================="
         );
 
-        System.out.println(
-                "EXTENT REPORT STARTED"
-        );
+        System.out.println("EXTENT REPORT STARTED");
 
         System.out.println(
                 "=========================================="
         );
     }
-
 
     // =========================================================
     // TEST START
@@ -150,182 +147,142 @@ public class ExtentListener implements ITestListener {
     public void onTestStart(ITestResult result) {
 
         String testName =
-                result.getMethod()
-                        .getMethodName();
+                result.getMethod().getMethodName();
 
         String description =
-                result.getMethod()
-                        .getDescription();
+                result.getMethod().getDescription();
 
         ExtentTest test;
 
         if (description != null
                 && !description.trim().isEmpty()) {
 
-            test =
-                    getExtentReports()
-                            .createTest(
-                                    testName,
-                                    description
-                            );
+            test = getExtentReports()
+                    .createTest(testName, description);
 
         } else {
 
-            test =
-                    getExtentReports()
-                            .createTest(testName);
+            test = getExtentReports()
+                    .createTest(testName);
         }
 
-
         extentTest.set(test);
-
 
         extentTest.get().log(
                 Status.INFO,
                 "Test Started: " + testName
         );
 
-
         System.out.println(
-                "TEST STARTED: " + testName
+                "[INFO] TEST STARTED: " + testName
         );
     }
 
-
     // =========================================================
-    // PASS
+    // TEST SUCCESS
     // =========================================================
 
     @Override
     public void onTestSuccess(ITestResult result) {
 
         String testName =
-                result.getMethod()
-                        .getMethodName();
+                result.getMethod().getMethodName();
 
+        ExtentTest test = extentTest.get();
 
-        /*
-         * Screenshot is added at the END of the test.
-         */
+        if (test != null) {
 
-        captureAndAttachScreenshot(
-                testName,
-                "PASS",
-                "Test Passed - Final Screenshot",
-                Status.PASS
-        );
+            test.log(
+                    Status.PASS,
+                    "Test Passed: " + testName
+            );
 
+            captureAndAttachScreenshot(
+                    testName,
+                    "PASS",
+                    "Test Passed - Final Screenshot",
+                    Status.PASS
+            );
+        }
 
         System.out.println(
-                "TEST PASSED: " + testName
+                "[PASS] TEST PASSED: " + testName
         );
     }
 
-
     // =========================================================
-    // FAIL
+    // TEST FAILURE
     // =========================================================
 
     @Override
     public void onTestFailure(ITestResult result) {
 
         String testName =
-                result.getMethod()
-                        .getMethodName();
+                result.getMethod().getMethodName();
 
+        ExtentTest test = extentTest.get();
 
-        /*
-         * First show the failure.
-         */
+        if (test != null) {
 
-        extentTest.get().log(
-                Status.FAIL,
-                "Test Failed: " + testName
-        );
+            test.log(
+                    Status.FAIL,
+                    "Test Failed: " + testName
+            );
 
+            if (result.getThrowable() != null) {
 
-        /*
-         * Show the actual exception / stack trace.
-         */
+                test.fail(result.getThrowable());
+            }
 
-        if (result.getThrowable() != null) {
-
-            extentTest.get().fail(
-                    result.getThrowable()
+            captureAndAttachScreenshot(
+                    testName,
+                    "FAIL",
+                    "Failure Screenshot",
+                    Status.FAIL
             );
         }
 
-
-        /*
-         * Screenshot is added DIRECTLY AFTER
-         * the failure/exception.
-         */
-
-        captureAndAttachScreenshot(
-                testName,
-                "FAIL",
-                "Failure Screenshot",
-                Status.FAIL
-        );
-
-
         System.out.println(
-                "TEST FAILED: " + testName
+                "[FAIL] TEST FAILED: " + testName
         );
     }
 
-
     // =========================================================
-    // SKIP
+    // TEST SKIPPED
     // =========================================================
 
     @Override
     public void onTestSkipped(ITestResult result) {
 
         String testName =
-                result.getMethod()
-                        .getMethodName();
+                result.getMethod().getMethodName();
 
+        ExtentTest test = extentTest.get();
 
-        /*
-         * Show skip information.
-         */
+        if (test != null) {
 
-        extentTest.get().log(
-                Status.SKIP,
-                "Test Skipped: " + testName
-        );
+            test.log(
+                    Status.SKIP,
+                    "Test Skipped: " + testName
+            );
 
+            if (result.getThrowable() != null) {
 
-        /*
-         * Show skip reason if available.
-         */
+                test.skip(result.getThrowable());
+            }
 
-        if (result.getThrowable() != null) {
-
-            extentTest.get().skip(
-                    result.getThrowable()
+            captureAndAttachScreenshot(
+                    testName,
+                    "SKIP",
+                    "Skipped Test Screenshot",
+                    Status.SKIP
             );
         }
 
-
-        /*
-         * Screenshot at the END of skipped test.
-         */
-
-        captureAndAttachScreenshot(
-                testName,
-                "SKIP",
-                "Skipped Test Screenshot",
-                Status.SKIP
-        );
-
-
         System.out.println(
-                "TEST SKIPPED: " + testName
+                "[SKIP] TEST SKIPPED: " + testName
         );
     }
-
 
     // =========================================================
     // SCREENSHOT
@@ -335,22 +292,21 @@ public class ExtentListener implements ITestListener {
             String testName,
             String status,
             String screenshotName,
-            Status extentStatus
-    ) {
+            Status extentStatus) {
+
+        ExtentTest test = extentTest.get();
+
+        if (test == null) {
+            return;
+        }
 
         try {
 
-            WebDriver driver =
-                    DriverBase.getDriver();
-
-
-            // =================================================
-            // CHECK DRIVER
-            // =================================================
+            WebDriver driver = DriverBase.getDriver();
 
             if (driver == null) {
 
-                extentTest.get().log(
+                test.log(
                         Status.WARNING,
                         "Driver is null. Screenshot cannot be captured."
                 );
@@ -358,10 +314,9 @@ public class ExtentListener implements ITestListener {
                 return;
             }
 
-
             if (!(driver instanceof TakesScreenshot)) {
 
-                extentTest.get().log(
+                test.log(
                         Status.WARNING,
                         "Driver does not support screenshots."
                 );
@@ -369,26 +324,19 @@ public class ExtentListener implements ITestListener {
                 return;
             }
 
-
             TakesScreenshot screenshotDriver =
                     (TakesScreenshot) driver;
 
-
-            // =================================================
-            // BASE64 SCREENSHOT
-            // =================================================
+            // Capture Base64 screenshot
 
             String base64Screenshot =
                     screenshotDriver.getScreenshotAs(
                             OutputType.BASE64
                     );
 
+            // Attach screenshot directly to Extent Report
 
-            // =================================================
-            // ADD SCREENSHOT DIRECTLY TO LOG
-            // =================================================
-
-            extentTest.get().log(
+            test.log(
                     extentStatus,
                     screenshotName,
                     MediaEntityBuilder
@@ -398,10 +346,7 @@ public class ExtentListener implements ITestListener {
                             .build()
             );
 
-
-            // =================================================
-            // ALSO SAVE PNG FILE
-            // =================================================
+            // Save physical screenshot
 
             saveScreenshot(
                     screenshotDriver,
@@ -409,26 +354,18 @@ public class ExtentListener implements ITestListener {
                     status
             );
 
-
             System.out.println(
                     screenshotName
                             + " added to Extent Report."
             );
 
-
         } catch (Exception e) {
 
-            try {
-
-                extentTest.get().log(
-                        Status.WARNING,
-                        "Screenshot capture failed: "
-                                + e.getMessage()
-                );
-
-            } catch (Exception ignored) {
-            }
-
+            test.log(
+                    Status.WARNING,
+                    "Screenshot capture failed: "
+                            + e.getMessage()
+            );
 
             System.out.println(
                     "Screenshot capture failed: "
@@ -437,7 +374,6 @@ public class ExtentListener implements ITestListener {
         }
     }
 
-
     // =========================================================
     // SAVE PHYSICAL SCREENSHOT
     // =========================================================
@@ -445,8 +381,7 @@ public class ExtentListener implements ITestListener {
     private static void saveScreenshot(
             TakesScreenshot screenshotDriver,
             String testName,
-            String status
-    ) {
+            String status) {
 
         try {
 
@@ -457,22 +392,17 @@ public class ExtentListener implements ITestListener {
                             + File.separator
                             + "screenshots";
 
-
             File directory =
                     new File(screenshotDirectory);
 
-
             if (!directory.exists()) {
-
                 directory.mkdirs();
             }
-
 
             String timeStamp =
                     new SimpleDateFormat(
                             "yyyyMMdd_HHmmss_SSS"
                     ).format(new Date());
-
 
             String fileName =
                     status
@@ -482,7 +412,6 @@ public class ExtentListener implements ITestListener {
                             + timeStamp
                             + ".png";
 
-
             File screenshotFile =
                     new File(
                             screenshotDirectory
@@ -490,11 +419,9 @@ public class ExtentListener implements ITestListener {
                                     + fileName
                     );
 
-
             screenshotDriver
                     .getScreenshotAs(OutputType.FILE)
                     .renameTo(screenshotFile);
-
 
         } catch (Exception e) {
 
@@ -505,7 +432,6 @@ public class ExtentListener implements ITestListener {
         }
     }
 
-
     // =========================================================
     // SUITE FINISH
     // =========================================================
@@ -514,22 +440,16 @@ public class ExtentListener implements ITestListener {
     public void onFinish(ITestContext context) {
 
         if (extent != null) {
-
             extent.flush();
         }
-
 
         System.out.println(
                 "=========================================="
         );
 
-        System.out.println(
-                "EXTENT REPORT GENERATED"
-        );
+        System.out.println("EXTENT REPORT GENERATED");
 
-        System.out.println(
-                "Location:"
-        );
+        System.out.println("Location:");
 
         System.out.println(
                 System.getProperty("user.dir")
@@ -540,5 +460,7 @@ public class ExtentListener implements ITestListener {
         System.out.println(
                 "=========================================="
         );
+
+        extentTest.remove();
     }
 }
