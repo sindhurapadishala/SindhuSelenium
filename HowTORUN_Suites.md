@@ -13,11 +13,10 @@ Command to run the suite
   - There are various ways to trigger the suite. Any how here is one of the ways:
         - You need to provide inv file and xml suite name to run the tests which you created above. 
         - Here is the sample command, this can be triggered from editor, command prompt, bat file or jenkins
-          -mvn install -Dmyproperty=trunk_jenkins_config.properties 
-                -Dsurefire.suiteXmlFiles=./src/test/resources/unitTest.xml -Dbrowser=chrome
-           
+          ->mvn clean test "-Dsurefire.suiteXmlFiles=.\src\test\resources\welcomeSuite.xml" "-Dmyproperty=git.properties"
+
 Where to find the logs ?
 =======================
-    - agm-selenium/target/log.html           
+    -/test-output/Extent_report.html           
            
                                 
