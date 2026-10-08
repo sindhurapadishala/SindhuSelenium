@@ -1,0 +1,11 @@
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite name="Amazon Suite">
+    <test name="ActionSuite">
+        <classes>
+            <class name="com.lazerycode.selenium.tests.agm.ActionSuite">
+
+            </class>
+
+        </classes>
+    </test>
+</suite>
